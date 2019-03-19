@@ -6,6 +6,8 @@
 
 ## 使い方
 1. Azure PowerShell をインストールする
+   1. Az モジュールの PowerShell をインストールする<br/>
+   https://docs.microsoft.com/ja-jp/powershell/azure/install-az-ps
 2. ログインする
    1. Login-AzAccount
 3. サブスクリプションを選択する

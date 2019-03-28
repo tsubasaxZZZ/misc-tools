@@ -74,6 +74,7 @@ Get-AzContext
 
 $resources = Import-Csv -Encoding Default -Path $DataFilePath
 
+# CSV を一行ごとにループ
 foreach ($r in $resources) {
     # 追加したいタグのキーを取得する
     # CSV のヘッダーのうち、既定のヘッダー名は取得しない(=追加するタグのキーのみを取得する)で配列化

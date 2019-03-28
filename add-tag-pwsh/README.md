@@ -27,5 +27,5 @@ resources_list.csv に、リソースの一覧がエクスポートされてい�
    - sample.csv にサンプルがあります。
 
 ## 使い方
-1. ツールを実行する(-Force をつけると実行可否を確認しません。初めは -Force をつけることをお勧めします)
+1. ツールを実行する(-Force をつけると実行可否を確認しません。初めは -Force をつけないことをお勧めします)
    - .\Set-TagFromCSV.ps1 -DataFilePath .\modified.csv -Force

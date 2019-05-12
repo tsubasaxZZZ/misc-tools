@@ -105,7 +105,12 @@ foreach ($r in $resources) {
     }
 
     # Azure のリソースを取得
-    $target = Get-AzResource -ResourceName $r.Name -ResourceGroupName $r.ResourceGroupName
+    $target = Get-AzResource -ResourceId $r.ResourceId
+    # Target が取得できない時すスキップ
+    if(!$target){
+        Write-InfoLog("リソース情報が取得できませんでした。:リソースID=" + $r.ResourceId)
+        continue
+    }
     $addTags = @{}
         
     # 既にタグがある場合はそれを使う

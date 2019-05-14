@@ -9,7 +9,7 @@ param
     [Parameter(Position = 0, Mandatory = $false)]
     [string]$LogFilePath = ".\Set-TagFromCSV.log",
     [Parameter(Position = 1, Mandatory = $true)]
-    [ValidateScript( {Test-Path $_})]
+    [ValidateScript( { Test-Path $_ })]
     [string]$DataFilePath,
     [Parameter(Position = 3, Mandatory = $false)]
     [switch]$Force
@@ -73,6 +73,14 @@ function Write-Error {
     #Write-InfoLog "例外が発生しました。"
 }
 
+# 全例外をキャッチ
+trap {
+    Write-Error
+    break
+}
+# ログ情報のクリア
+$Error.Clear()
+# エラー発生時は Stop
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version latest
 Get-AzContext
@@ -107,12 +115,12 @@ foreach ($r in $resources) {
     # Azure のリソースを取得
     $target = Get-AzResource -ResourceId $r.ResourceId
     # Target が取得できない時すスキップ
-    if(!$target){
+    if (!$target) {
         Write-InfoLog("リソース情報が取得できませんでした。:リソースID=" + $r.ResourceId)
         continue
     }
-    $addTags = @{}
-        
+    $addTags = @{ }
+
     # 既にタグがある場合はそれを使う
     if ($target.Tags) {
         $addTags = $target.Tags
@@ -143,17 +151,11 @@ foreach ($r in $resources) {
     }
 
     # タグの設定
-    try {
-        if ($Force) {
-            Write-InfoLog (Set-AzResource -Tag $addTags -ResourceId $target.ResourceId -Force)
-        }
-        else {
-            Write-InfoLog (Set-AzResource -Tag $addTags -ResourceId $target.ResourceId)
-        }
+    if ($Force) {
+        Write-InfoLog (Set-AzResource -Tag $addTags -ResourceId $target.ResourceId -Force)
     }
-    catch {
-        Write-InfoLog("例外が発生しました:ResourceID=[{0}], Tag=[{1}]" -f $target.ResourceId, ($addTags.Keys -join ","))
-        Write-Error
+    else {
+        Write-InfoLog (Set-AzResource -Tag $addTags -ResourceId $target.ResourceId)
     }
 
 }
